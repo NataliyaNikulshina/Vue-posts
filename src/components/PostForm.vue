@@ -16,8 +16,6 @@
 </template>
 
 <script>
-import MyInput from './UI/MyInput.vue';
-
 export default {
     data() {
         return {
@@ -37,7 +35,14 @@ export default {
             };
         }
     },
-    components: { MyInput }
+//     watch: {
+//       post: {
+//         handler(newValue) {
+// console.log(newValue);
+//         },
+//         deep: true
+//       }
+//     }
 }
 </script>
 
