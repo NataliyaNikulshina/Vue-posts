@@ -1,6 +1,7 @@
 <template>
   <div class="app">
     <h1>Мой проект</h1>
+    <MyInput v-model="searchQuery" placeholder="Поиск..."></MyInput>
     <div class="app__btns">
       <MyButton @click="showModal(modalVisible)">Создать пост</MyButton>
       <MySelect v-model="selectedSort" :options="sortOptions" />
@@ -9,7 +10,7 @@
     <MyModal v-model:show="modalVisible">
       <PostForm @create="createPost" />
     </MyModal>
-    <PostList :posts="sortedPosts" @remove="removePost" v-if="!isLoading" />
+    <PostList :posts="sortedAndSearchedPosts" @remove="removePost" v-if="!isLoading" />
     <div v-else>Загрузка ...</div>
   </div>
 </template>
@@ -17,16 +18,12 @@
 <script>
 import PostForm from "@/components/PostForm";
 import PostList from "@/components/PostList";
-import MyButton from "./components/UI/MyButton.vue";
 import axios from "axios";
-import MySelect from "./components/UI/MySelect.vue";
 export default {
   components: {
     PostForm,
     PostList,
-    MyButton,
-    MySelect,
-  },
+},
   data() {
     return {
       posts: [],
@@ -34,6 +31,7 @@ export default {
       modificatorValue: "",
       isLoading: false,
       selectedSort: "",
+      searchQuery: "",
       sortOptions: [
         { value: "title", name: "По названию" },
         { value: "body", name: "По содержанию" },
@@ -78,6 +76,9 @@ export default {
       } else {
         return [...this.posts].sort((post1, post2) => post1[this.selectedSort]?.localeCompare(post2[this.selectedSort]));
       }
+    },
+    sortedAndSearchedPosts() {
+      return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()));
     }
   },
   // watch: {
