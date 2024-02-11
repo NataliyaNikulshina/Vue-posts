@@ -1,13 +1,20 @@
 <template>
-    <button class="btn">
+    <button 
+    class="btn"
+    :class="{
+        btn__white: color === 'white',
+      }"
+    >
         <slot></slot>
     </button>
 </template>
 
 <script>
 export default {
-   name: "MyButton"
-
+   name: "MyButton",
+   props: {
+    color: [String]
+   },
 }
 </script>
 
@@ -19,5 +26,10 @@ export default {
   border: 1px solid teal;
   width: 200px;
   border-radius: 8px;
+}
+
+.btn__white {
+  color: #fff;
+  border: 1px solid #fff;
 }
 </style>
