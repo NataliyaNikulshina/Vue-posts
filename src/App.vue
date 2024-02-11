@@ -10,9 +10,15 @@
     <MyModal v-model:show="modalVisible">
       <PostForm @create="createPost" />
     </MyModal>
-    <PostList :posts="sortedAndSearchedPosts" @remove="removePost" v-if="!isLoading" />
+    <PostList
+      :posts="sortedAndSearchedPosts"
+      @remove="removePost"
+      v-if="!isLoading"
+    />
     <div v-else>Загрузка ...</div>
-    <NumberPages :pages="totalPages" :pagesCurrent="page" @update:pagesCurrent="setCurrentPage" />
+    <div ref="observer" class="observer"></div>
+    <!-- Пример постраничной пагинации
+    <NumberPages :pages="totalPages" :pagesCurrent="page" @update:pagesCurrent="setCurrentPage" /> -->
   </div>
 </template>
 
@@ -25,8 +31,8 @@ export default {
   components: {
     PostForm,
     PostList,
-    NumberPages
-},
+    NumberPages,
+  },
   data() {
     return {
       posts: [],
@@ -64,14 +70,17 @@ export default {
       try {
         this.isLoading = true;
         const responce = await axios.get(
-          "https://jsonplaceholder.typicode.com/posts", {
+          "https://jsonplaceholder.typicode.com/posts",
+          {
             params: {
               _page: this.page,
-              _limit: this.limit
-            }
+              _limit: this.limit,
+            },
           }
         );
-        this.totalPages = Math.ceil(responce.headers['x-total-count'] / this.limit);
+        this.totalPages = Math.ceil(
+          responce.headers["x-total-count"] / this.limit
+        );
         this.posts = responce.data;
         // console.log(responce);
       } catch (e) {
@@ -80,26 +89,66 @@ export default {
         this.isLoading = false;
       }
     },
+    async loadMorePosts() {
+      try {
+        this.page +=1;
+        const responce = await axios.get(
+          "https://jsonplaceholder.typicode.com/posts",
+          {
+            params: {
+              _page: this.page,
+              _limit: this.limit,
+            },
+          }
+        );
+        this.totalPages = Math.ceil(
+          responce.headers["x-total-count"] / this.limit
+        );
+        this.posts = [...this.posts, ...responce.data];
+        // console.log(responce);
+      } catch (e) {
+        alert("Ошибка");
+      } 
+    },
   },
   mounted() {
     this.feachPosts();
+    // observer для бесконечной прокрутки
+    console.log(this.$refs.observer);
+    const options = {
+      rootMargin: "0px",
+      threshold: 1.0,
+    };
+    const callback = (entries, observer) => {
+      if(entries[0].isIntersecting && this.page < this.totalPages) {
+        this.loadMorePosts();
+      }
+    };
+    const observer = new IntersectionObserver(callback, options);
+    observer.observe(this.$refs.observer);
   },
   computed: {
     sortedPosts() {
       if (this.selectedSort === "id") {
         return [...this.posts].sort((post1, post2) => post1.id - post2.id);
       } else {
-        return [...this.posts].sort((post1, post2) => post1[this.selectedSort]?.localeCompare(post2[this.selectedSort]));
+        return [...this.posts].sort((post1, post2) =>
+          post1[this.selectedSort]?.localeCompare(post2[this.selectedSort])
+        );
       }
     },
     sortedAndSearchedPosts() {
-      return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()));
-    }
+      return this.sortedPosts.filter((post) =>
+        post.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    },
   },
   watch: {
-    page() {
-      this.feachPosts()
-    },
+    // // Постраничная пагинация
+    // page() {
+    //   this.feachPosts()
+    // },
+    // // пример сортировки через watch, но это не эффективно
     // selectedSort(newValue) {
     //   if (newValue === "id") {
     //     this.posts.sort((a, b) => {
@@ -134,5 +183,9 @@ export default {
 .app__btns {
   display: flex;
   justify-content: space-between;
+}
+
+.observer {
+  height: 10px;
 }
 </style>
