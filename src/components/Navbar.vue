@@ -3,6 +3,7 @@
     <Logo @click="$router.push('/')" style="cursor: pointer"/>
     <div class="nav__btn">
         <MyButton color="white" @click="$router.push('/posts')">Посты</MyButton>
+        <MyButton color="white" @click="$router.push('/store')">Посты из Vuex</MyButton>
         <MyButton color="white" @click="$router.push('/about')">О сайте</MyButton>
     </div>
     </div>
