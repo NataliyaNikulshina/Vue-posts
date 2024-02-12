@@ -7,19 +7,10 @@
 </template>
 
 <script>
+import toogleMixin from '@/mixins/toogleMixin.js';
 export default {
   name: "MyModal",
-  props: {
-    show: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  methods: {
-    hideModal() {
-        this.$emit('update:show', false);
-    }
-  }
+  mixins: [toogleMixin]
 };
 </script>
 
