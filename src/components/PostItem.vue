@@ -1,10 +1,12 @@
 <template>
   <div class="post">
     <div>
-        <div><strong>Название: </strong>{{ post.title }}</div>
-        <div><strong>Описание: </strong>{{ post.body }}</div>
+      <div>№ {{ post.id }}</div>
+      <div><strong>Название: </strong>{{ post.title }}</div>
+      <div><strong>Описание: </strong>{{ post.body }}</div>
     </div>
     <div class="post__btns">
+      <MyButton @click="$router.push(`/posts/${post.id}`)">Открыть</MyButton>
         <MyButton @click="$emit('remove', post)">Удалить</MyButton>
     </div>
   </div>
@@ -31,5 +33,11 @@ export default {
   justify-content: space-between;
   gap: 10px;
 }
+
+.post__btns {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 
 </style>
