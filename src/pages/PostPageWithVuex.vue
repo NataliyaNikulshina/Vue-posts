@@ -25,7 +25,7 @@
     />
     <div v-else>Загрузка ...</div>
     <div
-      v-intersection="{ loadMorePosts, page, totalPages }"
+      v-intersection="{ loadMorePosts }"
       class="observer"
     ></div>
   </div>
