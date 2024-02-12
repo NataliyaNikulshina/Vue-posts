@@ -27,5 +27,23 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(0, 81, 81) rgb(236, 236, 236);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Custom scrollbar handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(0, 81, 81);
+  /* border-radius: 5px; */
+}
+
+/* Optional: Hover effect for scrollbar handle */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(236, 236, 236);
 }
 </style>

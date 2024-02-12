@@ -26,6 +26,7 @@ export default {
   border: 1px solid teal;
   width: 200px;
   border-radius: 8px;
+  cursor: pointer;
 }
 
 .btn__white {

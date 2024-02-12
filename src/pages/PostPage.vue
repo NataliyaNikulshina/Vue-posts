@@ -16,7 +16,9 @@
       v-if="!isLoading"
     />
     <div v-else>Загрузка ...</div>
-    <div ref="observer" class="observer"></div>
+    <!-- пример слежения за определенным элементом на странице с помощью ref -->
+    <!-- <div ref="observer" class="observer"></div> -->
+    <div v-intersection="{loadMorePosts, page, totalPages}" class="observer"></div>
     <!-- Пример постраничной пагинации
       <NumberPages :pages="totalPages" :pagesCurrent="page" @update:pagesCurrent="setCurrentPage" /> -->
   </div>
@@ -113,19 +115,6 @@ export default {
   },
   mounted() {
     this.feachPosts();
-    // observer для бесконечной прокрутки
-    console.log(this.$refs.observer);
-    const options = {
-      rootMargin: "0px",
-      threshold: 1.0,
-    };
-    const callback = (entries, observer) => {
-      if (entries[0].isIntersecting && this.page < this.totalPages) {
-        this.loadMorePosts();
-      }
-    };
-    const observer = new IntersectionObserver(callback, options);
-    observer.observe(this.$refs.observer);
   },
   computed: {
     sortedPosts() {

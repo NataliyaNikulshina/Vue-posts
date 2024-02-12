@@ -1,6 +1,6 @@
 <template>
     <div class="nav">
-    <Logo />
+    <Logo @click="$router.push('/')" style="cursor: pointer"/>
     <div class="nav__btn">
         <MyButton color="white" @click="$router.push('/posts')">Посты</MyButton>
         <MyButton color="white" @click="$router.push('/about')">О сайте</MyButton>
@@ -32,5 +32,7 @@
     display: flex;
     gap: 10px;
   }
+
+
 </style>
   
